@@ -7,12 +7,16 @@ public class ChatServer {
     private static Set<ClientHandler> clientHandlers = new HashSet<>();
 
     public static void main(String[] args) {
+        // try-with-resources to automatically close the ServerSocket after usage
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("ChatServer started, listening on port: " + PORT);
             while (true) {
+                // Wait and accept incoming client connections.
                 Socket clientSocket = serverSocket.accept();
+                // Create a new client handler for each connected client.
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
                 clientHandlers.add(clientHandler);
+                // Start a new thread for each client to handle their messages.
                 new Thread(clientHandler).start();
             }
         } catch (IOException e) {
@@ -20,6 +24,7 @@ public class ChatServer {
         }
     }
 
+    // Broadcast a message to all connected clients except the sender.
     public static void broadcast(String message, ClientHandler excludeUser) {
         for (ClientHandler clientHandler : clientHandlers) {
             if (clientHandler != excludeUser) {
@@ -43,6 +48,7 @@ public class ChatServer {
         @Override
         public void run() {
             try {
+                 // Get the input stream to read data sent by the client.
                 InputStream input = socket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                 OutputStream output = socket.getOutputStream();
