@@ -50,16 +50,14 @@ public class ChatServer {
             try {
                  // Get the input stream to read data sent by the client.
                 InputStream input = socket.getInputStream();
+                // Convert byte stream (InputStream) to character stream and buffer it.
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                 OutputStream output = socket.getOutputStream();
                 out = new PrintWriter(output, true);
                 String clientMessage;
         
-                while (true) {
-                    clientMessage = reader.readLine();
-                    if (clientMessage.equals("bye")) {
-                        break;
-                    }
+                // clientMessage is null when the socket is closed from client side
+                while ((clientMessage = reader.readLine()) != null) { 
                     System.out.println("Received: " + clientMessage);
                     broadcast(clientMessage, this);
                 }
