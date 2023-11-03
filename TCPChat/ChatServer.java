@@ -4,7 +4,7 @@ import java.util.*;
 
 public class ChatServer {
     private static final int PORT = 1234;
-    private static Set<ClientHandler> clientHandlers = new HashSet<>();
+    private static Set<ClientHandler> clientHandlers = Collections.synchronizedSet(new HashSet<>());
 
     public static void main(String[] args) {
         // try-with-resources to automatically close the ServerSocket after usage
