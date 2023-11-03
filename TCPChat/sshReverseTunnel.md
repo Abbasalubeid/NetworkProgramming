@@ -19,9 +19,9 @@
 This forwards any connections made to port 1234 on remote-machine-address.com to port 1234 on your local machine.
 After executing the command, you should be logged into your account on remote-machine-address.com
 
-## 3. Set Up the Client on Your Remote Machine
+## 3. Set Up the Client on a Remote Machine
 
-1. **Transfer the `ChatClient` Java program to the remote machine**. You can use `scp` or your preferred method:
+1. **Transfer the `ChatClient` Java program to the remote machine**. You can use `scp`:
 ```bash
    scp path/to/ChatClient.java yourUsername@remote-machine-address.com:/path/on/remote/machine
 ```
