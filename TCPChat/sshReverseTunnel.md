@@ -38,11 +38,3 @@ After executing the command, you should be logged into your account on remote-ma
 1. **Start the chat session**:
    - The `ChatClient` on the remote machine can now communicate with the `ChatServer` on your local machine.
 
-## 5. Ending the Session
-
-1. **End the chat session**:
-   - Type "bye" in the client or terminate the server on your local machine.
-2. **Close the SSH connection**:
-   - Type `exit` or press `CTRL + D`.
-
-
