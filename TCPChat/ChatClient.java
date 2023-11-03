@@ -3,7 +3,7 @@ import java.net.*;
 import java.util.*;
 
 public class ChatClient {
-    private static final String SERVER_IP = "127.0.0.1"; 
+    private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 1234;
 
     public static void main(String[] args) {
@@ -14,11 +14,19 @@ public class ChatClient {
             receiveThread.start();
 
             new Thread(new SendMessagesThread(socket)).start();
+
+            System.out.println("Connected to server on:");
+            System.out.println("IP: " + SERVER_IP);
+            System.out.println("Server Port: " + SERVER_PORT);
+            System.out.println("Client Local Port: " + socket.getLocalPort()); 
+            System.out.println("You can start typing messages!");
+
             // Main thread waits for the receiveThread to finish
             receiveThread.join();
 
         } catch (ConnectException e) {
-            System.out.println("Unable to connect to the server at IP: " + SERVER_IP + " and port: " + SERVER_PORT + ". Ensure the server is up and running.");
+            System.out.println("Unable to connect to the server at IP: " + SERVER_IP + " and port: " + SERVER_PORT
+                    + ". Ensure the server is up and running.");
         } catch (UnknownHostException e) {
             System.out.println("Unknown host: " + SERVER_IP + ". Ensure you have the correct IP address.");
         } catch (Exception e) {
@@ -27,21 +35,19 @@ public class ChatClient {
     }
 
     private static class ReceiveMessagesThread extends Thread {
+        private Socket socket;
         private BufferedReader reader;
-    
+
         public ReceiveMessagesThread(Socket socket) {
-            try {
-                InputStream input = socket.getInputStream();
-                 // Convert byte stream (InputStream) to character stream and buffer it.
-                reader = new BufferedReader(new InputStreamReader(input));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            this.socket = socket;
         }
-    
+
         public void run() {
             while (true) {
                 try {
+                    InputStream input = socket.getInputStream();
+                    // Convert byte stream (InputStream) to character stream and buffer it.
+                    reader = new BufferedReader(new InputStreamReader(input));
                     // Read a line from the server.
                     String response = reader.readLine();
                     // If the server closes the connection, reader.readLine() will return null.
@@ -73,8 +79,6 @@ public class ChatClient {
             // Scanner to read user input from the console.
             Scanner scanner = new Scanner(System.in);
             while (true) {
-                System.out.print("Enter message: ");
-                
                 // Read user's message from the console.
                 String message = scanner.nextLine();
                 // Write user's message to server
