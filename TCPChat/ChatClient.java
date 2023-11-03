@@ -10,16 +10,16 @@ public class ChatClient {
         // try-with-resources to automatically close the Socket after usage
         try (Socket socket = new Socket(SERVER_IP, SERVER_PORT)) {
 
+            System.out.println("Connected to server on:");
+            System.out.println("IP: " + SERVER_IP);
+            System.out.println("Server Port: " + SERVER_PORT);
+            System.out.println("Client Local Port: " + socket.getLocalPort());
+            System.out.println("You can start typing messages!");
+
             Thread receiveThread = new Thread(new ReceiveMessagesThread(socket));
             receiveThread.start();
 
             new Thread(new SendMessagesThread(socket)).start();
-
-            System.out.println("Connected to server on:");
-            System.out.println("IP: " + SERVER_IP);
-            System.out.println("Server Port: " + SERVER_PORT);
-            System.out.println("Client Local Port: " + socket.getLocalPort()); 
-            System.out.println("You can start typing messages!");
 
             // Main thread waits for the receiveThread to finish
             receiveThread.join();
@@ -56,7 +56,7 @@ public class ChatClient {
                         System.exit(0);
                         break;
                     }
-                    System.out.println("\n" + response);
+                    System.out.println(response);
                 } catch (IOException ex) {
                     System.out.println("Error reading from server: " + ex.getMessage());
                     break;
