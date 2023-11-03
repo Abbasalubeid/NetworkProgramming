@@ -35,7 +35,7 @@ You can open as many clients as you want by starting a new terminal instance for
 ## TCP Headers and Flags Analysis
 
 For a detailed analysis of TCP headers and an explanation of various TCP flags within the context of this project, see:
-[TCPHeaderAndFlags.md](TCPHeaderAndFlags.md).
+[TCPHeaderAndFlags](TCPHeaderAndFlags.md)
 
 
 ## Network Traffic Analysis with Wireshark
@@ -43,11 +43,11 @@ For a detailed analysis of TCP headers and an explanation of various TCP flags w
 This project incorporates the use of Wireshark to analyze the TCP communication between the chat clients and server. Wireshark is an essential tool for observing the underlying TCP packets and the sequence of the TCP handshake, data transmission, and connection teardown processes in real-time. Through packet inspection, you can gain deeper insights into how TCP operates and troubleshoot any potential issues with the network communication.
 
 For detailed steps on capturing and analyzing traffic with Wireshark, see:
-[WiresharkGuide.md](WiresharkGuide.md)
+[WiresharkGuide](WiresharkGuide.md)
 
 ## Remote Usage with SSH Reverse Tunnel
 
 To run the `ChatServer` on a local machine and the `ChatClient` on a remote machine, you can use SSH reverse tunneling. This approach allows you to securely connect the client on a remote machine to the server running on your local machine, even if the server is behind a firewall or NAT.
 
 For more information, see:
-[ssh.md](ssh.md)
+[sshReverseTunnel](sshReverseTunnel.md)
