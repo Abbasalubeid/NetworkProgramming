@@ -1,9 +1,5 @@
 # Analysis of TCP Headers and Flags in Wireshark
 
-**Abbas Alubeid**
-
-**alubeid@kth.se**
-
 ## TCP Headers
 
 At the lower left of Figure 1, the TCP headers for the initial packet are displayed, representing the client's connection request to the server, identified by the SYN (Synchronize) flag.
