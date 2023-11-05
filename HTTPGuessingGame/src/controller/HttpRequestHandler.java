@@ -2,17 +2,19 @@ package controller;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Arrays;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import view.HttpResponseBuilder;
 import model.GameSession;
 
 public class HttpRequestHandler implements Runnable {
     private final Socket clientSocket;
     private GameSession gameSession;
+    private final ConcurrentHashMap<String, GameSession> sessions;
 
-    public HttpRequestHandler(Socket socket) {
+    public HttpRequestHandler(Socket socket, ConcurrentHashMap<String, GameSession> sessions) {
         this.clientSocket = socket;
-        this.gameSession = new GameSession("single");
+        this.sessions = sessions;
     }
 
     @Override
@@ -38,22 +40,34 @@ public class HttpRequestHandler implements Runnable {
                 return;
             }
 
-            // Split the request into parts
-            String[] requestParts = requestLine.split(" ")[1].split("\\?");
-            System.out.println(Arrays.toString(requestParts));
-            String path = requestParts[0];
-            String query = requestParts.length > 1 ? requestParts[1] : "";
-
-            // parse query parameters
-            if (path.equals("/") && query.startsWith("guess=")) {
-                String guessStr = query.split("=").length > 1 ? query.split("=")[1] : "";
-                String message = gameSession.guessNumber(guessStr);
-                int guessCount = gameSession.getNumberOfGuesses();
-                sendGamePage(out, message, guessCount);
-            } else {
-                // If no guess was provided, show the game page with the starting message
-                sendGamePage(out, "Try to guess the number between 1 and 100", 0);
+            List<String> headers = new ArrayList<>();
+            String line;
+            while ((line = in.readLine()) != null && !line.isEmpty()) {
+                headers.add(line);
             }
+
+            String sessionId = null;
+            for (String header : headers) {
+                System.out.println(header);
+                if (header.startsWith("Cookie: ")) {
+                    String[] cookies = header.substring(8).split("; ");
+                    for (String cookie : cookies) {
+                        if (cookie.startsWith("sessionId=")) {
+                            sessionId = cookie.split("=")[1];
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (sessionId != null) {
+                sendResponse(out, 200, "You have been here....: " + sessionId);
+            }
+            else{
+                sendResponse(out, 200, "We dont know you yet, take a cookie");
+
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
