@@ -31,5 +31,19 @@ public class HttpResponseBuilder {
                 + "\r\n"
                 + body;
     }
+    
+    public String buildGamePage(String message, int guessCount) {
+        String body = "<html><head><title>Guessing Game</title></head><body>"
+                + "<div style='text-align: center; margin-top: 50px;'>"
+                + "<h2>Guess the number between 1 and 100</h2>"
+                + "<p>" + message + "</p>"
+                + "<form action='/' method='get'>"
+                + "Guess: <input type='text' name='guess'><br><br>"
+                + "<input type='submit' value='Try'>"
+                + "</form>"
+                + "<p>Guess Count: " + guessCount + "</p>"
+                + "</div></body></html>";
 
+        return buildResponse(200, body);
+    }
 }
