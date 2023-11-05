@@ -23,24 +23,36 @@ public class HttpRequestHandler implements Runnable {
 
             // Read the request line
             String requestLine = in.readLine();
-            if (requestLine != null && !requestLine.isEmpty()) {
-                System.out.println(requestLine);
-
-                //TODO: More parsing request
-
-                HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
-                String response = responseBuilder.buildResponse("Welcome! You have accessed this server via HTTP.");
-
-                // Send the response
-                out.print(response);
+            
+            if (requestLine == null || requestLine.isEmpty()) {
+                sendResponse(out, 400, "Bad Request: The request line is empty.");
+                return;
             }
 
-            // Close streams and socket
-            out.close();
-            in.close();
-            clientSocket.close();
+            System.out.println(requestLine);
+
+            if (requestLine.contains("favicon.ico")) {
+                sendResponse(out, 404, "Not Found: The requested resource was not found on this server.");
+                return;
+            }
+
+            sendResponse(out, 200, "Welcome! You have accessed this server via HTTP.");
+
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private void sendResponse(PrintWriter out, int statusCode, String content) {
+        HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
+        String response = responseBuilder.buildResponse(statusCode, content);
+        out.print(response);
+        out.flush();
     }
 }
