@@ -36,11 +36,11 @@ public class GameSession {
             guesses.add(guess);
             if (guess == secretNumber) {
                 gameWon = true;
-                return "Correct! The number was " + secretNumber + ". Your guesses: " + guesses + ".";
+                return "Correct! The number was " + secretNumber;
             } else if (guess < secretNumber) {
-                 return "Higher! Your guesses: " + guesses + ".";
+                 return "Higher!";
             } else {
-                return "Lower! Your guesses: " + guesses + ".";
+                return "Lower!";
             }
         } catch (NumberFormatException e) {
             return "That's not a valid number. Please enter a number between 1 and 100.";
