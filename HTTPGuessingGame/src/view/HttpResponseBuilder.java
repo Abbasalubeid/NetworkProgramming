@@ -4,32 +4,38 @@ import java.nio.charset.StandardCharsets;
 
 public class HttpResponseBuilder {
 
-    public String buildResponse(int statusCode, String content) {
-        String statusLine;
-        switch (statusCode) {
-            case 200:
-                statusLine = "HTTP/1.1 200 OK";
-                break;
-            case 400:
-                statusLine = "HTTP/1.1 400 Bad Request";
-                break;
-            case 404:
-                statusLine = "HTTP/1.1 404 Not Found";
-                break;
-            default:
-                statusLine = "HTTP/1.1 500 Internal Server Error";
-                break;
+    private String buildHeader(int statusCode, String cookie) {
+        String statusLine = getStatusLine(statusCode);
+        String header = statusLine + "\r\n"
+            + "Content-Type: text/html; charset=UTF-8\r\n";
+        
+        if (cookie != null && !cookie.isEmpty()) {
+            header += "Set-Cookie: sessionId=" + cookie + "; Path=/; HttpOnly\r\n";
         }
+        
+        header += "\r\n"; // End of header section
+        return header;
+    }
+    
+    
+    private String getStatusLine(int statusCode) {
+        switch (statusCode) {
+            case 200: return "HTTP/1.1 200 OK";
+            case 400: return "HTTP/1.1 400 Bad Request";
+            case 404: return "HTTP/1.1 404 Not Found";
+            default: return "HTTP/1.1 500 Internal Server Error";
+        }
+    }
 
-        String body = (content != null && !content.isEmpty()) ? "<h1>" + content + "</h1>\n" : "";
-        byte[] bodyBytes = body.getBytes(StandardCharsets.UTF_8);
-        int contentLength = bodyBytes.length;
-
-        return statusLine + "\r\n"
-                + "Content-Type: text/html; charset=UTF-8\r\n"
-                + "Content-Length: " + contentLength + "\r\n"
-                + "\r\n"
-                + body;
+    public String buildResponse(int statusCode, String content) {
+        return buildResponse(statusCode, content, null);
+    }
+    
+    // Overloaded method for response with cookie
+    public String buildResponse(int statusCode, String content, String cookie) {
+        String body = (content != null && !content.isEmpty()) ? content : "";
+        String header = buildHeader(statusCode, cookie);
+        return header + body;
     }
     
     public String buildGamePage(String message, int guessCount) {
@@ -46,4 +52,5 @@ public class HttpResponseBuilder {
 
         return buildResponse(200, body);
     }
+
 }
