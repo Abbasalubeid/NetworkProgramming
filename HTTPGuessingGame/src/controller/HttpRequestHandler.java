@@ -71,19 +71,27 @@ public class HttpRequestHandler implements Runnable {
                 String guessStr = query.split("=").length > 1 ? query.split("=")[1] : "";
                 currentGuess = guessStr;
             }
+
             if (sessionId != null && sessions.containsKey(sessionId)) {
                 gameSession = sessions.get(sessionId);
                 String message = gameSession.guessNumber(currentGuess);
-                int guessCount = gameSession.getNumberOfGuesses();
-                String welcome = "Welcome back " + sessionId + "\n";
-                message += welcome;
-                sendGamePage(out, message, guessCount); // Rerender
+                Set<Integer> guesses = gameSession.getGuesses();
+                boolean gameWon = gameSession.isGameWon();
+                if (query.startsWith("restart")) {
+                    sessions.remove(sessionId);
+                    sessionId = UUID.randomUUID().toString();
+                    gameSession = new GameSession(sessionId);
+                    sessions.put(sessionId, gameSession); 
+                    sendNewGamePage(out, "New game! Try to guess the number between 1 and 100", sessionId);
+                } else {
+                    sendGamePage(out, message, guesses, gameWon); // Pass gameWon to decide whether to show the input or the restart button
+                }
             } else {
                 // Create a new session ID and GameSession
                 sessionId = UUID.randomUUID().toString();
                 gameSession = new GameSession(sessionId);
                 sessions.put(sessionId, gameSession);
-                sendNewGamePage(out, "Try to guess the number between 1 and 100", 0, sessionId);
+                sendNewGamePage(out, "Try to guess the number between 1 and 100", sessionId);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -103,16 +111,16 @@ public class HttpRequestHandler implements Runnable {
         out.flush();
     }
 
-    private void sendNewGamePage(PrintWriter out, String message, int guessCount, String cookie) {
+    private void sendNewGamePage(PrintWriter out, String message, String cookie) {
         HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
-        String response = responseBuilder.buildGamePageWithCookie(message, guessCount, cookie);
+        String response = responseBuilder.buildGamePageWithCookie(message, cookie);
         out.print(response);
         out.flush();
     }
 
-    private void sendGamePage(PrintWriter out, String message, int guessCount) {
+    private void sendGamePage(PrintWriter out, String message, Set<Integer> guesses, boolean gameWon) {
         HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
-        String response = responseBuilder.buildGamePage(message, guessCount);
+        String response = responseBuilder.buildGamePage(message, guesses, gameWon);
         out.print(response);
         out.flush();
     }
