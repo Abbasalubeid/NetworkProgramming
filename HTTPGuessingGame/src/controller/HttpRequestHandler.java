@@ -60,14 +60,31 @@ public class HttpRequestHandler implements Runnable {
                 }
             }
 
-            if (sessionId != null) {
-                sendResponse(out, 200, "You have been here....: " + sessionId);
-            }
-            else{
-                sendResponse(out, 200, "We dont know you yet, take a cookie");
+            String currentGuess = "";
+            // Split the request into parts
+            String[] requestParts = requestLine.split(" ")[1].split("\\?");
+            String path = requestParts[0];
+            String query = requestParts.length > 1 ? requestParts[1] : "";
 
+            // parse query parameters
+            if (path.equals("/") && query.startsWith("guess=")) {
+                String guessStr = query.split("=").length > 1 ? query.split("=")[1] : "";
+                currentGuess = guessStr;
             }
-
+            if (sessionId != null && sessions.containsKey(sessionId)) {
+                gameSession = sessions.get(sessionId);
+                String message = gameSession.guessNumber(currentGuess);
+                int guessCount = gameSession.getNumberOfGuesses();
+                String welcome = "Welcome back " + sessionId + "\n";
+                message += welcome;
+                sendGamePage(out, message, guessCount); // Rerender
+            } else {
+                // Create a new session ID and GameSession
+                sessionId = UUID.randomUUID().toString();
+                gameSession = new GameSession(sessionId);
+                sessions.put(sessionId, gameSession);
+                sendNewGamePage(out, "Try to guess the number between 1 and 100", 0, sessionId);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -82,6 +99,13 @@ public class HttpRequestHandler implements Runnable {
     private void sendResponse(PrintWriter out, int statusCode, String content) {
         HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
         String response = responseBuilder.buildResponse(statusCode, content);
+        out.print(response);
+        out.flush();
+    }
+
+    private void sendNewGamePage(PrintWriter out, String message, int guessCount, String cookie) {
+        HttpResponseBuilder responseBuilder = new HttpResponseBuilder();
+        String response = responseBuilder.buildGamePageWithCookie(message, guessCount, cookie);
         out.print(response);
         out.flush();
     }
