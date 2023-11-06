@@ -1,16 +1,16 @@
 package model;
 
-import java.util.Random;
+import java.util.*;
 
 public class GameSession {
     private final String sessionId;
-    private int numberOfGuesses;
+    private final Set<Integer> guesses;
     private final int secretNumber;
     private boolean gameWon = false;
 
     public GameSession(String sessionId) {
         this.sessionId = sessionId;
-        this.numberOfGuesses = 0;
+        this.guesses = new LinkedHashSet<>(); // Maintain order of guesses
         this.secretNumber = new Random().nextInt(100) + 1;
     }
 
@@ -18,8 +18,8 @@ public class GameSession {
         return sessionId;
     }
 
-    public int getNumberOfGuesses() {
-        return numberOfGuesses;
+    public Set<Integer> getGuesses() {
+        return guesses;
     }
 
     public boolean isGameWon() {
@@ -33,14 +33,14 @@ public class GameSession {
                 return "Your guess is out of the valid range (1-100). Please try again.";
             }
 
-            numberOfGuesses++;
+            guesses.add(guess);
             if (guess == secretNumber) {
                 gameWon = true;
-                return "Correct! The number was " + secretNumber + ". It took you " + numberOfGuesses + " guesses.";
+                return "Correct! The number was " + secretNumber + ". Your guesses: " + guesses + ".";
             } else if (guess < secretNumber) {
-                return "Higher! You have guessed " + numberOfGuesses + " times.";
+                 return "Higher! Your guesses: " + guesses + ".";
             } else {
-                return "Lower! You have guessed " + numberOfGuesses + " times.";
+                return "Lower! Your guesses: " + guesses + ".";
             }
         } catch (NumberFormatException e) {
             return "That's not a valid number. Please enter a number between 1 and 100.";

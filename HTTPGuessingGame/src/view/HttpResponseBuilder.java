@@ -1,6 +1,7 @@
 package view;
 
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class HttpResponseBuilder {
 
@@ -38,7 +39,7 @@ public class HttpResponseBuilder {
         return header + body;
     }
     
-    public String buildGamePage(String message, int guessCount) {
+    public String buildGamePage(String message, Set<Integer> guesses) {
         String body = "<html><head><title>Guessing Game</title></head><body>"
                 + "<div style='text-align: center; margin-top: 50px;'>"
                 + "<h2>Guess the number between 1 and 100</h2>"
@@ -47,13 +48,13 @@ public class HttpResponseBuilder {
                 + "Guess: <input type='text' name='guess'><br><br>"
                 + "<input type='submit' value='Try'>"
                 + "</form>"
-                + "<p>Guess Count: " + guessCount + "</p>"
+                + "<p>Your guesses: " + guesses + "</p>"
                 + "</div></body></html>";
 
         return buildResponse(200, body);
     }
 
-    public String buildGamePageWithCookie(String message, int guessCount, String cookie) {
+    public String buildGamePageWithCookie(String message, String cookie) {
         String body = "<html><head><title>Guessing Game</title></head><body>"
                 + "<div style='text-align: center; margin-top: 50px;'>"
                 + "<h2>Guess the number between 1 and 100</h2>"
@@ -62,7 +63,6 @@ public class HttpResponseBuilder {
                 + "Guess: <input type='text' name='guess'><br><br>"
                 + "<input type='submit' value='Try'>"
                 + "</form>"
-                + "<p>Guess Count: " + guessCount + "</p>"
                 + "</div></body></html>";
 
         return buildResponse(200, body, cookie); // Call with cookie
