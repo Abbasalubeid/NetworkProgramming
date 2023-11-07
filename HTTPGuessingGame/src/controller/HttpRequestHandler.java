@@ -26,9 +26,11 @@ public class HttpRequestHandler implements Runnable {
             BufferedReader in = new BufferedReader(new InputStreamReader(input));
             // Get output stream to send data to the client.
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
-
             // Read the request line
             String requestLine = in.readLine();
+
+            System.out.println("\nReceived a HTTP request:");
+            System.out.println("Request line: " + requestLine);
 
             if (requestLine == null || requestLine.isEmpty()) {
                 sendResponse(out, 400, "Bad Request: The request line is empty.");
@@ -48,7 +50,7 @@ public class HttpRequestHandler implements Runnable {
 
             String sessionId = null;
             for (String header : headers) {
-                System.out.println(header);
+                // System.out.println(header);
                 if (header.startsWith("Cookie: ")) {
                     String[] cookies = header.substring(8).split("; ");
                     for (String cookie : cookies) {
@@ -72,23 +74,40 @@ public class HttpRequestHandler implements Runnable {
                 currentGuess = guessStr;
             }
 
+            System.out.println("Path: " + path);
+            System.out.println("Query: " + query);
+
             if (sessionId != null && sessions.containsKey(sessionId)) {
                 gameSession = sessions.get(sessionId);
                 String message = gameSession.guessNumber(currentGuess);
+
+                System.out.println("\nClient " + sessionId + " guessed: " + currentGuess);
+                System.out.println("Response: " + message);
+
                 Set<Integer> guesses = gameSession.getGuesses();
                 boolean gameWon = gameSession.isGameWon();
                 if (query.startsWith("restart")) {
+                    System.out.println("\nClient " + sessionId + " restared!");
+                    
                     sessions.remove(sessionId);
                     sessionId = UUID.randomUUID().toString();
                     gameSession = new GameSession(sessionId);
-                    sessions.put(sessionId, gameSession); 
+                    
+                    System.out.println("Created a new game session with ID: " + sessionId);
+                    
+                    sessions.put(sessionId, gameSession);
+                    
                     sendNewGamePage(out, "New game! Try to guess the number between 1 and 100", sessionId);
                 } else {
-                    sendGamePage(out, message, guesses, gameWon); // Pass gameWon to decide whether to show the input or the restart button
+                    sendGamePage(out, message, guesses, gameWon); // Pass gameWon to decide whether to show the input or
+                                                                  // the restart button
                 }
             } else {
                 // Create a new session ID and GameSession
                 sessionId = UUID.randomUUID().toString();
+
+                System.out.println("No session ID found, creating a new one: " + sessionId);
+
                 gameSession = new GameSession(sessionId);
                 sessions.put(sessionId, gameSession);
                 sendNewGamePage(out, "Try to guess the number between 1 and 100", sessionId);
