@@ -32,7 +32,7 @@ This project is designed as a practical study of the HTTP protocol by implementi
    ```
    javac controller/HttpRequestHandler.java view/HttpResponseBuilder.java model/GameSession.java MainServer.java
    ```
-3. Once the compilation is successful, you can start the server by running the `MainServer` class:
+3. Start the server by running the `MainServer` class:
    ```
    java MainServer
    ```
@@ -41,16 +41,15 @@ This project is designed as a practical study of the HTTP protocol by implementi
 
 ### Using the GameClient to Simulate a Web Browser
 
-1. Keep the server running.
-2. Open a new terminal and navigate to the `src` directory.
-3. Compile the `GameClient.java`:
+1. Open a new terminal and navigate to the `src` directory.
+2. Compile the `GameClient.java`:
    ```
    javac GameClient.java
    ```
-4. Run the `GameClient` by specifying how many times you want to simulate a web browser session:
+3. Run the `GameClient` by specifying how many times you want to simulate a web browser session:
    ```
    java GameClient
    ```
-5. Enter the desired number of game sessions for the `GameClient` to play and hit `Enter`.
-6. On the server terminal, you can see the `GameClient` sending requests to the server and the server responding accordingly.
+4. Enter the desired number of game sessions for the `GameClient` to play and hit `Enter`.
+5. On the server terminal, you can see the `GameClient` sending requests to the server and the server responding accordingly.
 
