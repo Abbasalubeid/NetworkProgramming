@@ -1,15 +1,20 @@
 import java.net.*;
 import java.io.*;
-import java.util.Random;
+import java.util.*;
 
 public class GameClient {
 
     public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter the number of games you want to play: ");
+
+        int numberOfGames = scanner.nextInt();
+        
         String url = "http://localhost:8080";
         int totalGuesses = 0;
 
         // Play the game 100 times
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= numberOfGames; i++) {
             String cookie = null;
             boolean gameWon = false;
             int guesses = 0;
