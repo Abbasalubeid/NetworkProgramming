@@ -63,7 +63,7 @@ public class HttpRequestHandler implements Runnable {
             }
 
             String currentGuess = "";
-            // Split the request into parts
+            // Split the request into parts 
             String[] requestParts = requestLine.split(" ")[1].split("\\?");
             String path = requestParts[0];
             String query = requestParts.length > 1 ? requestParts[1] : "";
@@ -87,7 +87,7 @@ public class HttpRequestHandler implements Runnable {
                 Set<Integer> guesses = gameSession.getGuesses();
                 boolean gameWon = gameSession.isGameWon();
                 if (query.startsWith("restart")) {
-                    System.out.println("\nClient " + sessionId + " restared!");
+                    System.out.println("\nClient " + sessionId + " restarted!");
                     
                     sessions.remove(sessionId);
                     sessionId = UUID.randomUUID().toString();
