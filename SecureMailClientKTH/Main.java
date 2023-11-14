@@ -13,7 +13,9 @@ public class Main {
             client.connect();
             client.login(username, password);
 
-            String emailNumberStr = console.readLine("Enter email number to retrieve: ");
+            client.listInbox();
+
+            String emailNumberStr = console.readLine("\nEnter email number to retrieve: ");
             int emailNumber = Integer.parseInt(emailNumberStr);
             client.fetchEmail(emailNumber);
 

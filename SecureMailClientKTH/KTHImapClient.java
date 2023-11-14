@@ -32,14 +32,18 @@ public class KTHImapClient {
         // Read the response from the server
         String response = reader.readLine();
         while (response != null) {
-            System.out.println("Response: " + response);
+            System.out.println(response);
             if (response.startsWith(commandTag)) {
                 break; // Exit the loop if the response starts with the command tag
             }
             response = reader.readLine();
         }
     }
-    
+
+    public void listInbox() throws IOException {
+        sendCommand("a002 SELECT INBOX\r\n");
+        sendCommand("a003 FETCH 1:* (UID FLAGS BODY[HEADER.FIELDS (SUBJECT FROM DATE)])\r\n");
+    }
 
     public void fetchEmail(int emailNumber) throws IOException {
         sendCommand("a002 SELECT INBOX\r\n");
