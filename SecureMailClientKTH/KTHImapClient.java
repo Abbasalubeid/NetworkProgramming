@@ -47,7 +47,7 @@ public class KTHImapClient {
 
     public void fetchEmail(int emailNumber) throws IOException {
         sendCommand("a002 SELECT INBOX\r\n");
-        sendCommand("a003 FETCH " + emailNumber + " FULL\r\n");
+        sendCommand("a003 FETCH " + emailNumber + " BODY[TEXT]\r\n");
     }
 
     public void logout() throws IOException {
