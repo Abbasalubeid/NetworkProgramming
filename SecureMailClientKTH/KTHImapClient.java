@@ -1,4 +1,5 @@
 import java.io.*;
+import java.io.Console;
 import java.net.Socket;
 
 import javax.net.ssl.SSLSocket;
@@ -17,7 +18,9 @@ public class KTHImapClient {
         writer = new PrintStream(imapSocket.getOutputStream());
 
         String serverGreeting = reader.readLine();
-        System.out.println("Server Greeting: " + serverGreeting);
+        if (serverGreeting == null || !serverGreeting.contains("OK")) {
+            throw new IOException("Failed to connect to IMAP server. Server greeting not received or invalid.");
+        }
 
     }
 
@@ -34,6 +37,10 @@ public class KTHImapClient {
         while (response != null) {
             System.out.println(response);
             if (response.startsWith(commandTag)) {
+                
+                if (response.contains("NO LOGIN"))
+                    throw new IOException("Login failed. Check your credentials.");
+                
                 break; // Exit the loop if the response starts with the command tag
             }
             response = reader.readLine();
