@@ -17,12 +17,16 @@ public class Main {
 
             String emailNumberStr = console.readLine("\nEnter email number to retrieve: ");
             int emailNumber = Integer.parseInt(emailNumberStr);
+            System.out.println(" ");
             client.fetchEmail(emailNumber);
 
             client.logout();
 
         } catch (Exception e) {
-            e.printStackTrace();
+           System.err.println("Error: " + e.getMessage());
+        } finally {
+            // Clear password data
+            java.util.Arrays.fill(passwordArray, ' ');
         }
     }
 }
