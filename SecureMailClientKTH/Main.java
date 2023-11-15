@@ -8,24 +8,39 @@ public class Main {
         char[] passwordArray = console.readPassword("Enter your KTH password: ");
         String password = new String(passwordArray);
 
+        String operation = console.readLine("Enter 'receive' to receive emails or 'send' to send an email: ");
+
         try {
-            KTHImapClient client = new KTHImapClient();
-            client.connect();
-            client.login(username, password);
+            if (operation.equalsIgnoreCase("receive")) {
+                KTHImapClient imapClient = new KTHImapClient();
+                imapClient.connect();
+                imapClient.login(username, password);
 
-            client.listInbox();
+                imapClient.listInbox();
 
-            String emailNumberStr = console.readLine("\nEnter email number to retrieve: ");
-            int emailNumber = Integer.parseInt(emailNumberStr);
-            System.out.println(" ");
-            client.fetchEmail(emailNumber);
+                String emailNumberStr = console.readLine("\nEnter email number to retrieve: ");
+                int emailNumber = Integer.parseInt(emailNumberStr);
+                System.out.println(" ");
+                imapClient.fetchEmail(emailNumber);
 
-            client.logout();
+                imapClient.logout();
+            } else if (operation.equalsIgnoreCase("send")) {
+                KTHSmtpClient smtpClient = new KTHSmtpClient();
+                smtpClient.connect();
+                smtpClient.startTls();
+                smtpClient.login(username, password);
 
+                String subject = console.readLine("Enter subject for the email: ");
+                String body = console.readLine("Enter body for the email: ");
+                smtpClient.sendEmail(username + "@kth.se", username + "@kth.se", subject, body);
+
+            } else {
+                System.out.println("Invalid operation. Please enter 'receive' or 'send'.");
+            }
         } catch (Exception e) {
-           System.err.println("Error: " + e.getMessage());
+            System.err.println("Error: " + e.getMessage());
         } finally {
-            // Clear password data
+            // Clear password data and close resources
             java.util.Arrays.fill(passwordArray, ' ');
         }
     }
