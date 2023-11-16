@@ -19,25 +19,34 @@ public class KTHImapClient {
 
         String serverGreeting = reader.readLine();
         if (serverGreeting == null || !serverGreeting.contains("OK")) {
-            throw new IOException("Failed to connect to IMAP server. Server greeting not received or invalid.");
+            throw new IOException("Failed to connect to IMAP server.");
         }
+        
+        System.out.println("Connected to IMAP Server. Server Greeting: " + serverGreeting);
 
     }
 
     public void login(String username, String password) throws IOException {
+        System.out.println("Logging in with username: " + username);
         sendCommand("a001 LOGIN " + username + " " + password + "\r\n");
     }
 
     private void sendCommand(String command) throws IOException {
         String commandTag = command.split(" ")[0];
         writer.println(command);
-    
+        
+        // Check if the command contains a password, and replace it with asterisks for logging
+        String logCommand = command.toLowerCase().startsWith("a001 login") ?
+        command.split(" ")[0] + " LOGIN " + command.split(" ")[2] + " *****\r\n" : command;
+        System.out.println("Client: " + logCommand.trim());
+
+        
         // Read the response from the server
         String response = reader.readLine();
         while (response != null) {
-            System.out.println(response);
+            System.out.println("Server: " + response);
             if (response.startsWith(commandTag)) {
-                
+
                 if (response.contains("NO LOGIN"))
                     throw new IOException("Login failed. Check your credentials.");
                 
@@ -49,7 +58,7 @@ public class KTHImapClient {
 
     public void listInbox() throws IOException {
         sendCommand("a002 SELECT INBOX\r\n");
-        sendCommand("a003 FETCH 1:* (UID FLAGS BODY[HEADER.FIELDS (SUBJECT FROM DATE)])\r\n");
+        sendCommand("a003 FETCH 1:* (BODY[HEADER.FIELDS (SUBJECT FROM)])\r\n");
     }
 
     public void fetchEmail(int emailNumber) throws IOException {
