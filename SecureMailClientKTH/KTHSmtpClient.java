@@ -21,6 +21,8 @@ public class KTHSmtpClient {
         if (serverGreeting == null || !serverGreeting.startsWith("220")) {
             throw new IOException("Failed to connect to SMTP server. Server greeting not received or invalid.");
         }
+        System.out.println("Connected to SMTP Server. Server Greeting: " + serverGreeting);
+
         sendCommand("HELO " + smtpHost);
     }
 
@@ -32,6 +34,8 @@ public class KTHSmtpClient {
         SSLSocket sslSocket = (SSLSocket) factory.createSocket(smtpSocket, smtpHost, smtpPort, true);
         sslSocket.startHandshake();
 
+        System.out.println("Upgraded connection to TLS.");
+
         reader = new BufferedReader(new InputStreamReader(sslSocket.getInputStream()));
         writer = new PrintStream(sslSocket.getOutputStream());
 
@@ -39,13 +43,16 @@ public class KTHSmtpClient {
     }
 
     public void login(String username, String password) throws IOException {
+        System.out.println("Authenticating with SMTP server...");
+
         sendCommand("AUTH LOGIN");
         sendCommand(Base64.getEncoder().encodeToString(username.getBytes()));
-        sendCommand(Base64.getEncoder().encodeToString(password.getBytes()));
+        sendSensitiveCommand(Base64.getEncoder().encodeToString(password.getBytes()));
     }
 
     public void sendEmail(String from, String to, String subject, String body) throws IOException {
-        
+        System.out.println("Preparing to send email...");
+
         // SMTP Envelope
         sendCommand("MAIL FROM:<" + from + ">");
         sendCommand("RCPT TO:<" + to + ">");
@@ -61,11 +68,23 @@ public class KTHSmtpClient {
         writer.flush();
     
         readResponse();
-
+        
+        System.out.println("Email sent successfully.");
+        
         sendCommand("QUIT");
     }
 
     private void sendCommand(String command) throws IOException {
+        System.out.println("Client: " + command);
+        
+        writer.println(command);
+        writer.flush();
+        readResponse();
+    }
+
+    private void sendSensitiveCommand(String command) throws IOException {
+        System.out.println("Client: *********");
+        
         writer.println(command);
         writer.flush();
         readResponse();
