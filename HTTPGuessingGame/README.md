@@ -53,3 +53,6 @@ This project is designed as a practical study of the HTTP protocol by implementi
 4. Enter the desired number of game sessions for the `GameClient` to play and hit `Enter`.
 5. On the server terminal, you can see the `GameClient` sending requests to the server and the server responding accordingly.
 
+## HTTPS Version
+
+A secure version of this server, which uses HTTPS for encrypted communication, is available on a separate branch named [https-feature-for-guessing-game](https://github.com/Abbasalubeid/NetworkProgramming/tree/https-feature-for-guessing-game/HTTPGuessingGame). The HTTPS version incorporates SSL/TLS for enhanced security and privacy.
