@@ -1,4 +1,4 @@
-This repository contains practical labs and tasks completed during a course in network programming. 
+This repository contains practical labs and tasks completed during a course in network programming. This course is a practical version of the theoretical concepts studied in the [Networks and Communication course](https://github.com/Abbasalubeid/NetworksAndCommunication).
 
 ## Course contents
 
