@@ -1,4 +1,4 @@
-package util;
+package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,7 +14,6 @@ public class DatabaseUtil {
             Properties prop = new Properties();
             prop.load(input);
 
-            String driver = prop.getProperty("driver");
             String url = prop.getProperty("url");
             String user = prop.getProperty("user");
             String password = prop.getProperty("password");
