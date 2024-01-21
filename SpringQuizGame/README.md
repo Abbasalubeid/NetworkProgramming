@@ -1,4 +1,4 @@
-This lab was about reimplementing the [TomcatQuizGame](https://github.com/Abbasalubeid/NetworkProgramming/tree/main/TomcatQuizGame) using Spring Boot and Spring MVC to explore a Spring-centric architecture. The application retains most of the original functionality with the addition of an email feature that uses JavaMail to send quiz results to users.
+Reimplemented [TomcatQuizGame](https://github.com/Abbasalubeid/NetworkProgramming/tree/main/TomcatQuizGame) using Spring Boot and Spring MVC to explore a Spring-centric architecture. The application retains most of the original functionality with the addition of an email feature that uses JavaMail to send quiz results to users.
 
 ## Project Structure
 
